@@ -1,1 +1,1 @@
-soundtrack.mp3 is the user-provided portfolio soundtrack. Playback starts from the beginning on fresh loads, with autoplay attempted and first-interaction fallback when the browser blocks audible autoplay. The top control plays or pauses; position is never persisted.
+soundtrack.mp3 is the user-provided portfolio soundtrack. A fresh music invitation appears on each page load; playback starts only when the visitor chooses play. Position is not persisted. The header provides play/pause after the invitation closes.

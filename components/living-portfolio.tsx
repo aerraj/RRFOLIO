@@ -14,7 +14,9 @@ function ProjectDrawing({ index }: { index: number }) {
 
 export default function LivingPortfolio(){
   const audio=useRef<HTMLAudioElement>(null);
-  const automaticStart=useRef(true);
+  const [musicPrompt,setMusicPrompt]=useState(true);
+  const [headerIntro,setHeaderIntro]=useState(true);
+  const [musicError,setMusicError]=useState(false);
   const [audioReady,setAudioReady]=useState(false);
   const [soundtrack,setSoundtrack]=useState(false);
   const [active,setActive]=useState('top');
@@ -33,31 +35,22 @@ export default function LivingPortfolio(){
     return()=>{clearInterval(timer);cancelAnimationFrame(scrollFrame);window.removeEventListener('scroll',updateScroll);observer.disconnect();sections.disconnect();};
   },[]);
   useEffect(()=>{
+    const timer=setTimeout(()=>setHeaderIntro(false),3200);
+    return()=>clearTimeout(timer);
+  },[]);
+  const playMusic=()=>{
     const player=audio.current;
     if(!player)return;
-    player.currentTime=0;
-    const start=()=>{
-      if(!automaticStart.current)return;
-      void player.play().then(()=>{automaticStart.current=false;}).catch(()=>{/* Retry on the first visitor gesture when autoplay is blocked. */});
-    };
-    const interact=(event:Event)=>{
-      if(event.target instanceof Element && event.target.closest('[data-music-control]'))return;
-      start();
-    };
-    start();
-    window.addEventListener('click',interact);
-    window.addEventListener('keydown',interact);
-    window.addEventListener('wheel',start,{passive:true});
-    window.addEventListener('touchmove',start,{passive:true});
-    window.addEventListener('scroll',start,{passive:true});
-    return()=>{window.removeEventListener('click',interact);window.removeEventListener('keydown',interact);window.removeEventListener('wheel',start);window.removeEventListener('touchmove',start);window.removeEventListener('scroll',start);player.pause();};
-  },[]);
+    setMusicError(false);
+    void player.play().then(()=>setMusicPrompt(false)).catch(()=>setMusicError(true));
+  };
   const chapter = Math.max(0,chapters.findIndex(([id])=>id===active));
   return <div ref={root} data-chapter={active} className="living-site">
     <a className="skip-link" href="#main">Skip to content</a>
     <div className="world-ambience" aria-hidden="true"/><div className="page-grain" aria-hidden="true"/>
-    <header className="living-header"><a className="living-mark" href="#top" aria-label="Rishabh Raj home"><span className="mark-symbol">rr.</span>Rishabh Raj</a><span className="chapter-counter">0{chapter} <i>/</i> 05</span><div className="header-controls">{audioReady && <button data-music-control className="header-motion" onClick={()=>{automaticStart.current=false;const player=audio.current;if(!player)return;if(player.paused){void player.play().catch(()=>setSoundtrack(false));}else{player.pause();}}} aria-label={soundtrack?'Pause music':'Play music'}>{soundtrack?<Pause size={12}/>:<Play size={12}/>} {soundtrack?'Pause':'Play'} music</button>}</div></header>
-    {process.env.NEXT_PUBLIC_HAS_SOUNDTRACK === 'true' && <audio ref={audio} src={asset('/audio/soundtrack.mp3')} loop autoPlay preload="auto" onCanPlay={()=>setAudioReady(true)} onPlay={()=>setSoundtrack(true)} onPause={()=>setSoundtrack(false)} onError={()=>setAudioReady(false)}/>}
+    <header className={`living-header ${headerIntro?'header-intro':''}`}><a className="living-mark" href="#top" aria-label="Rishabh Raj home"><span className="mark-symbol">rr.</span>Rishabh Raj</a><span className="chapter-counter">0{chapter} <i>/</i> 05</span><div className="header-controls">{audioReady && <button data-music-control className="header-motion" onClick={()=>{const player=audio.current;if(!player)return;if(player.paused){playMusic();}else{player.pause();}}} aria-label={soundtrack?'Pause music':'Play music'}>{soundtrack?<Pause size={12}/>:<Play size={12}/>} {soundtrack?'Pause':'Play'} music</button>}</div></header>
+    {process.env.NEXT_PUBLIC_HAS_SOUNDTRACK === 'true' && <audio ref={audio} src={asset('/audio/soundtrack.mp3')} loop preload="auto" onCanPlay={()=>setAudioReady(true)} onPlay={()=>setSoundtrack(true)} onPause={()=>setSoundtrack(false)} onError={()=>setAudioReady(false)}/>}
+    {musicPrompt && <aside className="music-invitation" aria-label="Background music invitation"><div className="invitation-art" aria-hidden="true"><img src={asset('/images/rrfolio/ember.png')} alt=""/></div><div className="invitation-copy"><span className="eyebrow">A SOUNDTRACK FOR THE JOURNEY</span><p>Some worlds are better<br/><em>with sound.</em></p><button className="pill-link primary" onClick={playMusic}><Play size={13}/> Tap to play background music</button><button className="invitation-silent" onClick={()=>setMusicPrompt(false)}>Continue without sound</button>{musicError && <span role="status">Audio could not start. Please try again.</span>}</div></aside>}
     <nav className="chapter-rail" aria-label="Chapters">{chapters.map(([id,label],i)=><a key={id} href={`#${id}`} aria-label={`0${i} ${label}`} aria-current={active===id?'location':undefined}><span>0{i}</span><b>{label}</b><i/></a>)}</nav>
     <main id="main">
       <section className="living-hero" id="top">
@@ -67,7 +60,7 @@ export default function LivingPortfolio(){
       </section>
       <section className="perspective-scene" id="perspective"><div className="perspective-image" aria-hidden="true"><img src={asset('/images/rrfolio/geofront.jpg')} alt="" loading="lazy"/></div><div className="perspective-copy reveal"><p className="eyebrow">01 / A DIFFERENT LENS</p><h2>Not one discipline.<br/><em>One way of seeing.</em></h2><p>A faint signal in a machine. A hidden pattern in a market.<br/>A system that needs to survive the real world.<br/><br/>Different problems. The same instinct.<br/>Understand it deeply. Then build.</p></div><span className="scene-note">CURIOSITY IS THE CONNECTIVE TISSUE.</span></section>
       <section className="work-section-new section-wrap" id="work"><div className="section-heading reveal"><p className="eyebrow">02 / SELECTED WORK</p><h2>Ideas, made<br/><span>executable.</span></h2><p>Three projects at the intersection of curiosity and rigor.<br/>Built to be inspected, not just presented.</p></div><div className="work-grid">{featuredProjects.map((project,index)=><article className={`work-piece piece-${index} reveal`} key={project.title}><a className="project-art-link" href={project.href} target="_blank" rel="noreferrer" aria-label={`View ${project.title} on GitHub`}><ProjectDrawing index={index}/><span className="project-open"><ArrowUpRight size={20}/></span></a><div className="project-meta"><span>0{index+1} / {project.track.toUpperCase()}</span><span>{project.stack[0]}</span></div><div className="project-title-row"><h3><a href={project.href} target="_blank" rel="noreferrer">{project.title}</a></h3><button className="detail-toggle" aria-expanded={expanded===project.index} aria-controls={`detail-${project.index}`} aria-label={`${expanded===project.index?'Hide':'Show'} ${project.title} details`} onClick={()=>setExpanded(expanded===project.index?null:project.index)}>{expanded===project.index?<Minus size={18}/>:<Plus size={18}/>}</button></div><p className="project-short">{project.summary}</p><div className="project-expand" id={`detail-${project.index}`} hidden={expanded!==project.index}><p>{project.detail}</p><div className="stack-list">{project.stack.map(item=><span key={item}>{item}</span>)}</div></div><a className="project-source" href={project.href} target="_blank" rel="noreferrer">{project.cta} <ArrowUpRight size={13}/></a></article>)}</div></section>
-      <section className="method-section section-wrap reveal"><span className="eyebrow">THE THROUGHLINE</span><p>From a faint signal<br/>to a <em>working system.</em></p><div className="method-route"><span>Observe</span><i/><span>Question</span><i/><span>Build</span><i/><span>Verify</span><b className="route-pulse"/></div><span className="method-note">Curiosity starts it. Evidence finishes it.</span></section>
+      <section className="method-section section-wrap reveal"><div className="method-backdrop" aria-hidden="true"><img src={asset('/images/rrfolio/unit-01.png')} alt="" loading="lazy"/></div><span className="eyebrow">THE THROUGHLINE</span><p>From a faint signal<br/>to a <em>working system.</em></p><div className="method-route"><span>Observe</span><i/><span>Question</span><i/><span>Build</span><i/><span>Verify</span><b className="route-pulse"/></div><span className="method-note">Curiosity starts it. Evidence finishes it.</span></section>
       <section className="more-work section-wrap" id="experiments"><div className="retro-banner reveal"><img src={asset('/images/rrfolio/retro.jpg')} alt="Retro computers illuminated in cyan and magenta" loading="lazy"/><div><span className="eyebrow">THE BUILDER’S INSTINCT</span><p>Still curious.<br/><em>Still building.</em></p></div></div><div className="small-heading reveal"><p className="eyebrow">03 / FURTHER EXPLORATIONS</p><h2>Range, with intent.</h2><a className="text-link" href="https://github.com/aerraj" target="_blank" rel="noreferrer">All repositories <ArrowUpRight size={14}/></a></div><div className="exploration-list">{secondaryProjects.map((p,i)=><a className="exploration-row reveal" href={p.href} target="_blank" rel="noreferrer" key={p.title}><span className="row-number">0{i+1}</span><h3>{p.title}</h3><p>{p.note}</p><span className="row-lang">{p.lang}</span><ArrowUpRight size={20}/></a>)}</div></section>
       <section className="about-new section-wrap" id="about"><div className="about-intro reveal"><p className="eyebrow">04 / THE PERSON BEHIND THE WORK</p><h2>Curiosity doesn't<br/><span>stay in one lane.</span></h2><p>I'm Rishabh. An engineer drawn to problems where the signal is faint, the system is consequential, and the answer has to work outside a notebook.</p><p>Electrical engineering. Quantitative development. Production operations. Financial engineering. Different worlds, connected by the same instinct: understand it deeply, then build.</p><a className="text-link" href={asset('/resume.pdf')} target="_blank">The full story / Résumé <ArrowUpRight size={14}/></a></div><div className="experience-list">{timeline.map((item,i)=><article className="experience-item reveal" key={item.role}><span className="experience-dot"/><p className="eyebrow">{item.date}</p><h3>{item.role}</h3><span>{item.place}</span><p>{item.copy}</p></article>)}</div></section>
       <section className="proof-new section-wrap reveal"><div className="small-heading"><p className="eyebrow">A FEW INDEPENDENT SIGNALS</p><span>Each record opens its source. <ArrowUpRight size={12}/></span></div><div className="proof-grid">{proof.map(item=><a href={item.href.startsWith('/')?asset(item.href):item.href} target="_blank" rel="noreferrer" key={item.label}><span>{item.value}</span><p>{item.label}<ArrowUpRight size={12}/></p></a>)}</div></section>
