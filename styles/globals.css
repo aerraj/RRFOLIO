@@ -94,3 +94,8 @@
 .command-scene:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#07070ae6,transparent 42%,#07070a22)}
 .command-scene>.eyebrow{position:absolute;bottom:28px;left:32px;z-index:1;color:#c8c4df;text-shadow:0 2px 16px #000}
 @media(max-width:650px){.method-backdrop img{width:180%;left:-40%;height:130%;top:-15%;object-position:center 20%}.command-scene{margin-bottom:48px;height:300px}.command-scene img{object-position:center}.command-scene>.eyebrow{left:20px;bottom:22px;font-size:7px}}
+
+.sunset-scene{position:relative;isolation:isolate;overflow:hidden;background:#160b0d;height:85svh;min-height:520px;max-height:1000px}
+.sunset-scene img{width:100%;height:100%;object-fit:cover;object-position:center 60%}
+.sunset-scene:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#07070a,transparent 18%,transparent 84%,#07070a);pointer-events:none}
+@media(max-width:650px){.sunset-scene{height:70svh;min-height:440px}.sunset-scene img{object-position:63% center}}
