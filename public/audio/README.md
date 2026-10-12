@@ -1,1 +1,1 @@
-Add an authorized audio file here as soundtrack.mp3. The portfolio requests playback from the beginning on each fresh load. Browsers may block audible autoplay; the top play/pause control appears once the audio loads. Playback position is not persisted.
+soundtrack.mp3 is the user-provided portfolio soundtrack. Playback starts from the beginning on fresh loads, with autoplay attempted and first-interaction fallback when the browser blocks audible autoplay. The top control plays or pauses; position is never persisted.

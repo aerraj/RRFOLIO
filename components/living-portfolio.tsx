@@ -14,6 +14,7 @@ function ProjectDrawing({ index }: { index: number }) {
 
 export default function LivingPortfolio(){
   const audio=useRef<HTMLAudioElement>(null);
+  const automaticStart=useRef(true);
   const [audioReady,setAudioReady]=useState(false);
   const [soundtrack,setSoundtrack]=useState(false);
   const [active,setActive]=useState('top');
@@ -31,11 +32,28 @@ export default function LivingPortfolio(){
     root.current?.querySelectorAll('section[id]').forEach(e=>sections.observe(e));
     return()=>{clearInterval(timer);cancelAnimationFrame(scrollFrame);window.removeEventListener('scroll',updateScroll);observer.disconnect();sections.disconnect();};
   },[]);
+  useEffect(()=>{
+    const player=audio.current;
+    if(!player)return;
+    player.currentTime=0;
+    const start=()=>{
+      if(!automaticStart.current)return;
+      void player.play().then(()=>{automaticStart.current=false;}).catch(()=>{/* Retry on the first visitor gesture when autoplay is blocked. */});
+    };
+    const interact=(event:Event)=>{
+      if(event.target instanceof Element && event.target.closest('[data-music-control]'))return;
+      start();
+    };
+    start();
+    window.addEventListener('click',interact);
+    window.addEventListener('keydown',interact);
+    return()=>{window.removeEventListener('click',interact);window.removeEventListener('keydown',interact);player.pause();};
+  },[]);
   const chapter = Math.max(0,chapters.findIndex(([id])=>id===active));
   return <div ref={root} data-chapter={active} className="living-site">
     <a className="skip-link" href="#main">Skip to content</a>
     <div className="world-ambience" aria-hidden="true"/><div className="page-grain" aria-hidden="true"/>
-    <header className="living-header"><a className="living-mark" href="#top" aria-label="Rishabh Raj home"><span className="mark-symbol">rr.</span>Rishabh Raj</a><span className="chapter-counter">0{chapter} <i>/</i> 05</span><div className="header-controls">{audioReady && <button className="header-motion" onClick={()=>{const player=audio.current;if(!player)return;if(player.paused){void player.play().catch(()=>setSoundtrack(false));}else{player.pause();}}} aria-label={soundtrack?'Pause music':'Play music'}>{soundtrack?<Pause size={12}/>:<Play size={12}/>} {soundtrack?'Pause':'Play'} music</button>}</div></header>
+    <header className="living-header"><a className="living-mark" href="#top" aria-label="Rishabh Raj home"><span className="mark-symbol">rr.</span>Rishabh Raj</a><span className="chapter-counter">0{chapter} <i>/</i> 05</span><div className="header-controls">{audioReady && <button data-music-control className="header-motion" onClick={()=>{automaticStart.current=false;const player=audio.current;if(!player)return;if(player.paused){void player.play().catch(()=>setSoundtrack(false));}else{player.pause();}}} aria-label={soundtrack?'Pause music':'Play music'}>{soundtrack?<Pause size={12}/>:<Play size={12}/>} {soundtrack?'Pause':'Play'} music</button>}</div></header>
     {process.env.NEXT_PUBLIC_HAS_SOUNDTRACK === 'true' && <audio ref={audio} src={asset('/audio/soundtrack.mp3')} loop autoPlay preload="auto" onCanPlay={()=>setAudioReady(true)} onPlay={()=>setSoundtrack(true)} onPause={()=>setSoundtrack(false)} onError={()=>setAudioReady(false)}/>}
     <nav className="chapter-rail" aria-label="Chapters">{chapters.map(([id,label],i)=><a key={id} href={`#${id}`} aria-label={`0${i} ${label}`} aria-current={active===id?'location':undefined}><span>0{i}</span><b>{label}</b><i/></a>)}</nav>
     <main id="main">
