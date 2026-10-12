@@ -80,3 +80,9 @@
 .music-mini .music-mini-dismiss{padding:5px;color:#a597a9;border-left:1px solid #ffffff22;padding-left:9px}
 .music-mini [role=status]{font-size:9px;color:#ffb7c9}
 @media(max-width:650px){.music-invitation.music-mini{right:14px;bottom:14px;left:auto;width:auto}}
+
+/* Command-center still: blue atmosphere and a clear systems composition. */
+.method-backdrop img{width:100%;height:100%;left:0;top:0;object-fit:cover;object-position:center 45%;opacity:.72}
+.method-backdrop:after{background:linear-gradient(0deg,#07070a, #07070a33 24%,#07070a55 65%,#07070a),linear-gradient(90deg,#07070a77,transparent 50%,#07070a77)}
+.method-section>p,.method-route,.method-note{text-shadow:0 2px 16px #000}
+@media(max-width:650px){.method-backdrop img{width:100%;height:100%;left:0;top:0;object-position:center;opacity:.65}}
