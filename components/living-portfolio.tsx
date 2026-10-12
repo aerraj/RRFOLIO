@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ArrowDown, Plus, Minus, Pause, Play, Volume2, X } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, Plus, Minus, Pause, Play } from 'lucide-react';
 import { featuredProjects, secondaryProjects, timeline, proof } from '@/content/portfolio';
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const asset = (path: string) => `${basePath}${path}`;
@@ -13,7 +13,8 @@ function ProjectDrawing({ index }: { index: number }) {
 }
 
 export default function LivingPortfolio(){
-  const [paused,setPaused]=useState(false);
+  const audio=useRef<HTMLAudioElement>(null);
+  const [audioReady,setAudioReady]=useState(false);
   const [soundtrack,setSoundtrack]=useState(false);
   const [active,setActive]=useState('top');
   const [expanded,setExpanded]=useState<string|null>(null);
@@ -31,11 +32,11 @@ export default function LivingPortfolio(){
     return()=>{clearInterval(timer);cancelAnimationFrame(scrollFrame);window.removeEventListener('scroll',updateScroll);observer.disconnect();sections.disconnect();};
   },[]);
   const chapter = Math.max(0,chapters.findIndex(([id])=>id===active));
-  return <div ref={root} data-chapter={active} className={`living-site ${paused?'motion-paused':''}`}>
+  return <div ref={root} data-chapter={active} className="living-site">
     <a className="skip-link" href="#main">Skip to content</a>
     <div className="world-ambience" aria-hidden="true"/><div className="page-grain" aria-hidden="true"/>
-    <header className="living-header"><a className="living-mark" href="#top" aria-label="Rishabh Raj home"><span className="mark-symbol">rr.</span>Rishabh Raj</a><span className="chapter-counter">0{chapter} <i>/</i> 05</span><div className="header-controls"><button className="header-motion" onClick={()=>setSoundtrack(!soundtrack)} aria-expanded={soundtrack} aria-controls="soundtrack-player"><Volume2 size={12}/> Sound {soundtrack?'on':'off'}</button><button className="header-motion" onClick={()=>setPaused(!paused)} aria-pressed={paused}>{paused?<Play size={11}/>:<Pause size={11}/>} Motion {paused?'off':'on'}</button></div></header>
-    {soundtrack && <aside className="soundtrack-player" id="soundtrack-player" aria-label="YouTube soundtrack"><div><span>THE SOUNDTRACK</span><button onClick={()=>setSoundtrack(false)} aria-label="Stop music and close player"><X size={16}/></button></div><iframe width="320" height="200" src="https://www.youtube-nocookie.com/embed/086uhG3Rf3U?autoplay=1&loop=1&playlist=086uhG3Rf3U&playsinline=1" title="Portfolio soundtrack on YouTube" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen/><a href="https://www.youtube.com/watch?v=086uhG3Rf3U" target="_blank" rel="noreferrer">Open on YouTube ↗</a></aside>}
+    <header className="living-header"><a className="living-mark" href="#top" aria-label="Rishabh Raj home"><span className="mark-symbol">rr.</span>Rishabh Raj</a><span className="chapter-counter">0{chapter} <i>/</i> 05</span><div className="header-controls">{audioReady && <button className="header-motion" onClick={()=>{const player=audio.current;if(!player)return;if(player.paused){void player.play().catch(()=>setSoundtrack(false));}else{player.pause();}}} aria-label={soundtrack?'Pause music':'Play music'}>{soundtrack?<Pause size={12}/>:<Play size={12}/>} {soundtrack?'Pause':'Play'} music</button>}</div></header>
+    {process.env.NEXT_PUBLIC_HAS_SOUNDTRACK === 'true' && <audio ref={audio} src={asset('/audio/soundtrack.mp3')} loop autoPlay preload="auto" onCanPlay={()=>setAudioReady(true)} onPlay={()=>setSoundtrack(true)} onPause={()=>setSoundtrack(false)} onError={()=>setAudioReady(false)}/>}
     <nav className="chapter-rail" aria-label="Chapters">{chapters.map(([id,label],i)=><a key={id} href={`#${id}`} aria-label={`0${i} ${label}`} aria-current={active===id?'location':undefined}><span>0{i}</span><b>{label}</b><i/></a>)}</nav>
     <main id="main">
       <section className="living-hero" id="top">
@@ -50,6 +51,6 @@ export default function LivingPortfolio(){
       <section className="about-new section-wrap" id="about"><div className="about-intro reveal"><p className="eyebrow">04 / THE PERSON BEHIND THE WORK</p><h2>Curiosity doesn't<br/><span>stay in one lane.</span></h2><p>I'm Rishabh. An engineer drawn to problems where the signal is faint, the system is consequential, and the answer has to work outside a notebook.</p><p>Electrical engineering. Quantitative development. Production operations. Financial engineering. Different worlds, connected by the same instinct: understand it deeply, then build.</p><a className="text-link" href={asset('/resume.pdf')} target="_blank">The full story / Résumé <ArrowUpRight size={14}/></a></div><div className="experience-list">{timeline.map((item,i)=><article className="experience-item reveal" key={item.role}><span className="experience-dot"/><p className="eyebrow">{item.date}</p><h3>{item.role}</h3><span>{item.place}</span><p>{item.copy}</p></article>)}</div></section>
       <section className="proof-new section-wrap reveal"><div className="small-heading"><p className="eyebrow">A FEW INDEPENDENT SIGNALS</p><span>Each record opens its source. <ArrowUpRight size={12}/></span></div><div className="proof-grid">{proof.map(item=><a href={item.href.startsWith('/')?asset(item.href):item.href} target="_blank" rel="noreferrer" key={item.label}><span>{item.value}</span><p>{item.label}<ArrowUpRight size={12}/></p></a>)}</div></section>
       <section className="contact-new section-wrap" id="contact"><div className="contact-backdrop" aria-hidden="true"><img src={asset('/images/rrfolio/finale.png')} alt="" loading="lazy"/></div><div className="contact-glow" aria-hidden="true"/><div className="contact-top reveal"><p className="eyebrow"><span className="status-light"/> 05 / WHAT’S NEXT</p><p>Research, systems, and difficult<br/>questions worth staying up for.</p></div><a className="contact-title reveal" href="mailto:rraj09102002@gmail.com">Let's find<br/><span>what's next.</span><ArrowUpRight/></a><div className="contact-bottom reveal"><a className="text-link" href="mailto:rraj09102002@gmail.com">rraj09102002@gmail.com <ArrowUpRight size={15}/></a><div><a href="https://github.com/aerraj" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={13}/></a><a href="https://linkedin.com/in/aerraj" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={13}/></a></div></div></section>
-    </main><footer className="living-footer"><span>© {new Date().getFullYear()} Rishabh Raj</span><span>A RESTLESS MIND. AN OPEN HORIZON.</span><button onClick={()=>setPaused(!paused)} aria-pressed={paused}>{paused?<Play size={12}/>:<Pause size={12}/>} {paused?'Resume motion':'Pause motion'}</button><a href="#top">Back to top ↑</a></footer>
+    </main><footer className="living-footer"><span>© {new Date().getFullYear()} Rishabh Raj</span><span>A RESTLESS MIND. AN OPEN HORIZON.</span><a href="#top">Back to top ↑</a></footer>
   </div>;
 }

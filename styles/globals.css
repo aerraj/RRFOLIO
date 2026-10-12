@@ -44,3 +44,9 @@
 @media(max-width:650px){.hero-landscape img{opacity:1;object-position:51% center;filter:brightness(1.18)}.hero-landscape:after{background:linear-gradient(0deg,#07070a 0%,#07070ae6 8%,#07070a99 30%,#07070a22 60%,#07070a22)}.hero-text{width:100%}.hero-text h1{font-size:10.1vw}.header-controls{gap:12px}.header-controls .header-motion{font-size:8px}.soundtrack-player{right:12px;bottom:12px}.contact-backdrop img{object-position:26% center}.contact-backdrop:after{background:linear-gradient(0deg,#07070a, #07070a66 30%,#07070a99 65%,#07070a)}}
 @media(max-width:650px){.living-hero{padding-top:520px;min-height:max(950px,100svh)}.hero-landscape img{height:530px;object-position:51% center}.hero-landscape:after{background:linear-gradient(0deg,#07070a 0%,#07070a 41%,#07070a33 50%,transparent 66%,#07070a22)} }
 @media(max-width:650px){.hero-landscape:after{background:linear-gradient(180deg,#07070a22 0,transparent 280px,#07070a22 430px,#07070a 530px)}}
+
+/* Brighter finale, with only edge shading for continuity and legibility. */
+.contact-backdrop img{opacity:1;filter:brightness(1.18)}
+.contact-backdrop:after{background:linear-gradient(0deg,#07070a 0%,#07070a18 22%,#07070a22 65%,#07070a 100%),linear-gradient(90deg,#07070a55,transparent 70%)}
+.contact-title,.contact-top,.contact-bottom{text-shadow:0 2px 22px #0009}
+@media(max-width:650px){.contact-backdrop:after{background:linear-gradient(0deg,#07070a 0%,#07070a22 24%,#07070a44 65%,#07070a 100%)}}
