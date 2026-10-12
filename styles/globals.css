@@ -86,3 +86,11 @@
 .method-backdrop:after{background:linear-gradient(0deg,#07070a, #07070a33 24%,#07070a55 65%,#07070a),linear-gradient(90deg,#07070a77,transparent 50%,#07070a77)}
 .method-section>p,.method-route,.method-note{text-shadow:0 2px 16px #000}
 @media(max-width:650px){.method-backdrop img{width:100%;height:100%;left:0;top:0;object-position:center;opacity:.65}}
+
+/* Keep Unit-01 in the throughline; give the command center its own scene. */
+.method-backdrop img{height:160%;top:-20%;object-position:center 30%;opacity:.48}
+.command-scene{position:relative;height:clamp(270px,40vw,510px);overflow:hidden;margin-bottom:80px;background:#060b19;isolation:isolate}
+.command-scene img{width:100%;height:100%;object-fit:cover;object-position:center 46%;opacity:.88}
+.command-scene:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#07070ae6,transparent 42%,#07070a22)}
+.command-scene>.eyebrow{position:absolute;bottom:28px;left:32px;z-index:1;color:#c8c4df;text-shadow:0 2px 16px #000}
+@media(max-width:650px){.method-backdrop img{width:180%;left:-40%;height:130%;top:-15%;object-position:center 20%}.command-scene{margin-bottom:48px;height:300px}.command-scene img{object-position:center}.command-scene>.eyebrow{left:20px;bottom:22px;font-size:7px}}
