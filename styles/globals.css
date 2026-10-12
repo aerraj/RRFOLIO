@@ -101,3 +101,11 @@
 @media(max-width:650px){.sunset-scene{height:70svh;min-height:440px}.sunset-scene img{object-position:63% center}}
 .sunset-scene{height:auto;min-height:0;max-height:none;aspect-ratio:4/3}.sunset-scene img{position:absolute;inset:0;object-fit:contain;object-position:center}
 @media(max-width:650px){.sunset-scene{height:auto;min-height:0;aspect-ratio:4/3}.sunset-scene img{object-position:center}}
+
+/* Sunset city anchors the biography and career timeline. */
+.about-new{position:relative;isolation:isolate;overflow:hidden}
+.timeline-backdrop{position:absolute;inset:0;z-index:-1;background:#160b0d}
+.timeline-backdrop img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:.72}
+.timeline-backdrop:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#07070a, #07070a66 20%,#07070a77 80%,#07070a),linear-gradient(90deg,#07070a55,transparent 50%,#07070a66)}
+.about-new .about-intro,.about-new .experience-list{text-shadow:0 2px 18px #000}
+@media(max-width:650px){.timeline-backdrop img{object-position:65% center}.timeline-backdrop:after{background:linear-gradient(0deg,#07070a,#07070a99 18%,#07070a88 80%,#07070a)}}
