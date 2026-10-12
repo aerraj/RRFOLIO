@@ -99,3 +99,5 @@
 .sunset-scene img{width:100%;height:100%;object-fit:cover;object-position:center 60%}
 .sunset-scene:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#07070a,transparent 18%,transparent 84%,#07070a);pointer-events:none}
 @media(max-width:650px){.sunset-scene{height:70svh;min-height:440px}.sunset-scene img{object-position:63% center}}
+.sunset-scene{height:auto;min-height:0;max-height:none;aspect-ratio:4/3}.sunset-scene img{position:absolute;inset:0;object-fit:contain;object-position:center}
+@media(max-width:650px){.sunset-scene{height:auto;min-height:0;aspect-ratio:4/3}.sunset-scene img{object-position:center}}
