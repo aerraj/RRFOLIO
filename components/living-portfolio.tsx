@@ -47,7 +47,10 @@ export default function LivingPortfolio(){
     start();
     window.addEventListener('click',interact);
     window.addEventListener('keydown',interact);
-    return()=>{window.removeEventListener('click',interact);window.removeEventListener('keydown',interact);player.pause();};
+    window.addEventListener('wheel',start,{passive:true});
+    window.addEventListener('touchmove',start,{passive:true});
+    window.addEventListener('scroll',start,{passive:true});
+    return()=>{window.removeEventListener('click',interact);window.removeEventListener('keydown',interact);window.removeEventListener('wheel',start);window.removeEventListener('touchmove',start);window.removeEventListener('scroll',start);player.pause();};
   },[]);
   const chapter = Math.max(0,chapters.findIndex(([id])=>id===active));
   return <div ref={root} data-chapter={active} className="living-site">
