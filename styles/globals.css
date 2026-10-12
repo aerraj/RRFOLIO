@@ -25,3 +25,20 @@
 .hero-landscape{transform:translateY(calc(var(--scene-progress,0)*70px))}.chapter-rail:before{content:'';position:absolute;right:3px;top:5px;bottom:5px;width:1px;background:#ff91b2;transform:scaleY(var(--page-progress,0));transform-origin:top;z-index:-1;box-shadow:0 0 10px #f2397b44}
 @media(max-width:650px){.chapter-rail:before{right:12px;top:16px;bottom:16px}}
 @media(prefers-reduced-motion:reduce){.hero-landscape{transform:none}}
+
+/* Keep the crimson scene and its central figure visible behind the hero. */
+.hero-landscape img{opacity:1;filter:brightness(1.12);object-position:center 60%}
+.hero-landscape:after{background:linear-gradient(90deg,#07070ad9 0%,#07070a99 28%,#07070a18 52%,#07070a0a 80%),linear-gradient(0deg,#07070a 0%,#07070a22 12%,transparent 40%,#07070a33 100%)}
+.hero-text{width:58%}
+.hero-text h1{font-size:clamp(49px,5.7vw,92px)}
+.header-controls{display:flex;align-items:center;gap:22px}
+.soundtrack-player{position:fixed;right:28px;bottom:24px;width:322px;z-index:100;border:1px solid #ffffff24;background:#0d0b13;box-shadow:0 15px 60px #0009}
+.soundtrack-player>div{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;font-size:9px;letter-spacing:.15em;color:#c1b6c6}
+.soundtrack-player button{display:grid;place-items:center;background:none;border:0;color:inherit;cursor:pointer;padding:6px}
+.soundtrack-player iframe{display:block;width:320px;height:200px;border:0}
+.soundtrack-player>a{display:block;padding:10px 14px;font-size:10px;color:#e7bbcc}
+.contact-backdrop{position:absolute;inset:0;z-index:-2;overflow:hidden;background:#05070e}
+.contact-backdrop img{width:100%;height:100%;object-fit:cover;object-position:center 43%;opacity:.75;transform:scale(1.15)}
+.contact-backdrop:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#07070a 0%,#07070a33 25%,#07070a55 60%,#07070a 100%),linear-gradient(90deg,#07070a88,transparent)}
+.contact-glow{opacity:.3}
+@media(max-width:650px){.hero-landscape img{opacity:1;object-position:51% center;filter:brightness(1.18)}.hero-landscape:after{background:linear-gradient(0deg,#07070a 0%,#07070ae6 8%,#07070a99 30%,#07070a22 60%,#07070a22)}.hero-text{width:100%}.hero-text h1{font-size:10.1vw}.header-controls{gap:12px}.header-controls .header-motion{font-size:8px}.soundtrack-player{right:12px;bottom:12px}.contact-backdrop img{object-position:26% center}.contact-backdrop:after{background:linear-gradient(0deg,#07070a, #07070a66 30%,#07070a99 65%,#07070a)}}
